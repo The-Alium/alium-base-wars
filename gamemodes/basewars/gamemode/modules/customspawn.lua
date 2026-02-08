@@ -13,14 +13,16 @@ if SERVER then
 		spawns[ k ] = v
 	end
 
+	spawns[ 0 ] = #spawns
+
 	local function replaceSpawn()
-		if #spawns > 0 then
+		if spawns[ 0 ] > 0 then
 			timer.Simple( 0, function()
 				for _, v in ipairs( ents.FindByClass( "info_player_start" )  ) do
 					v:Remove()
 				end
 
-				for i = 1, #spawns do
+				for i = 1, spawns[ 0 ] do
 					local data = spawns[ i ]
 
 					local ent = ents.Create( "info_player_start" )
