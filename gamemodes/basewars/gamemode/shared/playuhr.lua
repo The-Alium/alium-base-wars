@@ -4,7 +4,7 @@ local tag = "BaseWars.Time"
 local PLAYER = debug.getregistry().Player
 
 if SERVER then
-	
+
 	PlayTime.LastThink = CurTime() + 1
 
 	function PlayTime:Init(ply) -- init
@@ -14,12 +14,12 @@ if SERVER then
 	end
 
 	function PlayTime:LoadGlobalTimeFile(ply) -- load
-	
+
 		self:Init(ply)
-		
+
 		BaseWars.MySQL.LoadVar(ply, "time", function(ply, var, val)
 			if not IsValid(ply) then return end
-			
+
 			ply:SetNWString(tag, tostring(val))
 		end)
 
@@ -33,7 +33,7 @@ if SERVER then
 
 	end
 
-	hook.Add("Initialize", function()
+	hook.Add("Initialize", "LastTHink",  function()
 
 		PlayTime.LastThink = CurTime() + 1	--Not needed? Don't know
 
@@ -43,7 +43,7 @@ if SERVER then
 
 		if not (CurTime() > PlayTime.LastThink) then return end
 		PlayTime.LastThink = CurTime() + 1
-	
+
 		for _, ply in next, player.GetAll() do
 
 			ply:SetNW2String("SessionTime", tostring(ply:GetSessionTime()))
@@ -54,9 +54,9 @@ if SERVER then
 	end)
 
 	hook.Add("PlayerInitialSpawn", "PlayTime.Connect", function(ply)
-		
+
 		ply.JoinTime = CurTime()
-		
+
 	end)
 
 	hook.Add("LoadData", "PlayTime.Connect", function(ply)
@@ -71,18 +71,18 @@ if SERVER then
 		PlayTime:SetGlobalTimeFile(ply, (tonumber(ply:GetNWString(tag)) or 0) + ply:GetSessionTime())
 
 	end)
-	
+
 	hook.Add( "ShutDown", "PlayTime.ShutDown", function()
-		
+
 		for _, ply, next in pairs( player.GetAll() ) do
-		
+
 			PlayTime:SetGlobalTimeFile(ply, (tonumber(ply:GetNWString(tag)) or 0) + ply:GetSessionTime())
-			
+
 		end
-		
+
 	end	)
 
-end 
+end
 
 function PLAYER:GetPlayTime()
 
@@ -105,7 +105,7 @@ function PLAYER:GetPlayTimeTable()
 	tbl.h = math.floor(time / 60 / 60)
 	tbl.m = math.floor(time / 60) % 60
 	tbl.s = math.floor(time) % 60
-	
+
 	return tbl
 
 end
@@ -128,11 +128,11 @@ function PLAYER:GetSessionTable()
 
 	local tbl = {}
 	local time = self:GetSessionTime() or 0
-	
+
 	tbl.h = math.floor(time / 60 / 60)
 	tbl.m = math.floor(time / 60) % 60
 	tbl.s = math.floor(time) % 60
-	
+
 	return tbl
 
 end
